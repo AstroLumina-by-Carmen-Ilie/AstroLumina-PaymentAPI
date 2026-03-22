@@ -5,14 +5,15 @@
   "main": "dist/server.js",
   "type": "module",
   "engines": {
-    "node": ">=20.0.0"
+    "node": "22.x"
   },
   "scripts": {
     "build": "tsc",
     "start": "node dist/server.js",
     "dev": "tsx watch src/server.ts",
     "typecheck": "tsc --noEmit",
-    "clean": "rm -rf dist"
+    "clean": "rm -rf dist",
+    "render-build": "rm -rf node_modules && npm install --include=dev && npm run build"
   },
   "dependencies": {
     "@sentry/node": "^10.45.0",
