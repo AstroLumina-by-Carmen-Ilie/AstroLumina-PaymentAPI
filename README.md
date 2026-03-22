@@ -1,165 +1,159 @@
-# AstroLumina-Stripe
+# AstroLumina Payment API
 
-Un server Node.js cu API Stripe pentru Astro Lumina, care oferă procesare plăți pentru servicii astrologice inclusiv programări, hărți natale și hărți karmice.
+Stripe Checkout session management for the AstroLumina astrological services platform.
 
-## Funcționalități
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.8-blue.svg)](https://www.typescriptlang.org/)
+[![Express](https://img.shields.io/badge/Express-5.x-green.svg)](https://expressjs.com/)
+[![Node](https://img.shields.io/badge/Node.js-20+-green.svg)](https://nodejs.org/)
+[![Stripe](https://img.shields.io/badge/Stripe-17.x-purple.svg)](https://stripe.com/)
 
-- **Integrare Stripe**: Procesare securizată a plăților folosind Stripe Checkout
-- **Checkout Embedded**: Experiență de plată fluidă cu interfață embedded
-- **Servicii Multiple**: Suport pentru plăți programări, hărți natale și hărți karmice
-- **Limitare Rate**: Protecție împotriva cererilor excesive (20 cereri pe minut)
-- **Configurare CORS**: Cereri cross-origin securizate de la domenii autorizate
-- **Configurare bazată pe Environment**: Gestionare securizată a cheilor API și setărilor
+## Overview
 
-## Cerințe Preliminare
+Creates Stripe Embedded Checkout sessions for astrological products — bookings, natal charts, karmic charts, and more. Designed as a stateless microservice within the AstroLumina platform.
 
-- Node.js (v14 sau mai mare)
-- npm sau yarn
-- Cont Stripe cu chei API
-- Produse și prețuri Stripe configurate
+## Quick Start
 
-## Instalare
-
-1. Clonează repository-ul:
 ```bash
-git clone <repository-url>
-cd astro-lumina-stripe
-```
-
-2. Instalează dependențele:
-```bash
+# Install dependencies
 npm install
-```
 
-3. Creează un fișier `.env` în directorul rădăcină cu următoarele variabile:
-```env
-STRIPE_SK=sk_test_... # Cheia secretă Stripe
-STRIPE_PK=pk_test_... # Cheia publicabilă Stripe
-STRIPE_API_VER=2023-10-16 # Versiunea API Stripe
-STRIPE_BOOKING_PRICE=price_... # ID preț pentru serviciul de programare
-STRIPE_NATAL_CHART_PRICE=price_... # ID preț pentru harta natală
-STRIPE_KARMIC_CHART_PRICE=price_... # ID preț pentru harta karmică
-```
+# Configure environment
+cp .env.example .env   # then edit with your Stripe keys
 
-## Utilizare
+# Development (auto-reload)
+npm run dev
 
-Pornește serverul de dezvoltare:
-```bash
+# Production
+npm run build
 npm start
 ```
 
-Serverul va rula pe `http://localhost:3032`
+Server runs on `http://localhost:3032`.
 
-## Endpoint-uri API
+## API Endpoints
 
-### POST /create-session-booking
-Creează o sesiune Stripe checkout pentru serviciile de programare.
+### `GET /health`
 
-**Exemplu de utilizare:**
+Returns server status, uptime, and memory usage.
+
+### `POST /create-checkout-session/:product`
+
+Creates a Stripe Embedded Checkout session. The `:product` parameter selects which service to charge for.
+
+**Available products:**
+
+| Product key | Description |
+|-------------|-------------|
+| `booking` | Astrological consultation booking |
+| `natal-chart` | Full natal chart report |
+| `karmic-chart` | Karmic chart with life lessons |
+| `relationship-chart` | Synastry / compatibility report |
+| `transit-chart` | Current planetary transits report |
+
+**Example:**
+
 ```bash
-curl -X POST http://localhost:3032/create-session-booking \
+curl -X POST http://localhost:3032/create-checkout-session/natal-chart \
   -H "Content-Type: application/json"
 ```
 
-**Răspuns:**
+**Response:**
+
 ```json
 {
   "clientSecret": "cs_test_..."
 }
 ```
 
-### POST /create-session-natal-chart
-Creează o sesiune Stripe checkout pentru serviciile de hartă natală.
+### `GET /session-status?session_id={ID}`
 
-**Exemplu de utilizare:**
-```bash
-curl -X POST http://localhost:3032/create-session-natal-chart \
-  -H "Content-Type: application/json"
-```
+Retrieves the status of a checkout session.
 
-**Răspuns:**
-```json
-{
-  "clientSecret": "cs_test_..."
-}
-```
+**Example:**
 
-### POST /create-session-karmic-chart
-Creează o sesiune Stripe checkout pentru serviciile de hartă karmică.
-
-**Exemplu de utilizare:**
-```bash
-curl -X POST http://localhost:3032/create-session-karmic-chart \
-  -H "Content-Type: application/json"
-```
-
-**Răspuns:**
-```json
-{
-  "clientSecret": "cs_test_..."
-}
-```
-
-### GET /session-status
-Obține statusul unei sesiuni checkout.
-
-**Parametri Query:**
-- `session_id`: ID-ul sesiunii Stripe
-
-**Exemplu de utilizare:**
 ```bash
 curl "http://localhost:3032/session-status?session_id=cs_test_..."
 ```
 
-**Răspuns:**
+**Response:**
+
 ```json
 {
   "status": "complete",
   "payment_status": "paid",
-  "customer_email": "customer@example.com"
+  "customer_email": "customer@example.com",
+  "amount_total": 15000,
+  "currency": "ron"
 }
 ```
 
-## Configurarea Sesiunilor Stripe Checkout
+### `GET /products`
 
-Codul utilizează următoarea configurație pentru crearea sesiunilor Stripe checkout:
+Lists all available products with their keys, names, and descriptions.
 
-```javascript
-stripe.checkout.sessions.create({
-  ui_mode: 'embedded',            // Mod embedded - checkout integrat în pagină
-  line_items: [
-    {
-      price: STRIPE_PRICE,        // ID-ul prețului din Stripe Dashboard
-      quantity: 1,                // Cantitatea (1 pentru servicii individuale)
-    },
-  ],
-  mode: 'payment',                // Mod plată - pentru plăți unice (nu abonamente)
-  redirect_on_completion: "never" // Nu redirect după completare, rămâne în pagină
-});
+## Environment Variables
+
+| Variable | Required | Default | Description |
+|----------|----------|---------|-------------|
+| `STRIPE_SK` | Yes | — | Stripe secret key |
+| `STRIPE_PK` | Yes | — | Stripe publishable key |
+| `STRIPE_BOOKING_PRICE` | Yes | — | Price ID for booking service |
+| `STRIPE_NATAL_CHART_PRICE` | Yes | — | Price ID for natal chart |
+| `STRIPE_KARMIC_CHART_PRICE` | Yes | — | Price ID for karmic chart |
+| `STRIPE_RELATIONSHIP_CHART_PRICE` | No | — | Price ID for relationship chart |
+| `STRIPE_TRANSIT_CHART_PRICE` | No | — | Price ID for transit chart |
+| `STRIPE_API_VER` | No | `2025-01-27.acacia` | Stripe API version |
+| `PORT` | No | `3032` | Server listen port |
+| `NODE_ENV` | No | `development` | Environment mode |
+| `CORS_ORIGINS` | No | *(hardcoded)* | Comma-separated allowed origins |
+| `SENTRY_DSN` | No | — | Sentry DSN for error tracking |
+| `SENTRY_RELEASE` | No | — | Sentry release identifier |
+
+## Project Structure
+
+```
+src/
+├── config/env.ts           # Zod-validated environment config
+├── instrument.ts           # Sentry initialization
+├── middleware/
+│   ├── security.ts         # Helmet, CORS, rate limiter
+│   └── error-handler.ts    # Error types and handlers
+├── routes/
+│   ├── checkout.ts         # Stripe checkout endpoints
+│   └── health.ts           # Health check
+├── types/
+│   └── products.ts         # Product catalog
+└── server.ts               # App entry + graceful shutdown
 ```
 
-### Explicația parametrilor:
+## Tech Stack
 
-- **`ui_mode: 'embedded'`**: Creează o experiență de checkout integrată direct în pagina web, fără redirect către Stripe
-- **`line_items`**: Lista produselor/serviciilor de cumpărat
-  - `price`: ID-ul prețului configurat în Stripe Dashboard (ex: `price_1ABC...`)
-  - `quantity`: Numărul de unități (de obicei 1 pentru servicii)
-- **`mode: 'payment'`**: Specifică că este o plată unică, nu un abonament recurent
-- **`redirect_on_completion: "never"`**: După finalizarea plății, utilizatorul rămâne pe aceeași pagină în loc să fie redirectat
+| Layer | Technology |
+|-------|-----------|
+| Runtime | Node.js 20+ |
+| Language | TypeScript 5.8 (strict mode) |
+| Framework | Express 5.x |
+| Payments | Stripe Embedded Checkout |
+| Validation | Zod |
+| Monitoring | Sentry (error tracking + profiling) |
+| Security | Helmet, CORS, Rate Limiting |
 
-## Dezvoltare
+## Security
 
-Serverul utilizează:
-- **Express.js**: Framework web
-- **Stripe Node.js SDK**: Procesare plăți
-- **CORS**: Partajare resurse cross-origin
-- **express-rate-limit**: Limitare rate cereri
-- **dotenv**: Gestionare variabile de mediu
-- **nodemon**: Repornire automată în dezvoltare
+- **Helmet** — secure HTTP headers
+- **Rate limiting** — 20 requests/minute/IP
+- **CORS** — explicit origin whitelist
+- **1MB body limit** — rejects oversized payloads with 413
+- **Sentry PII scrubbing** — Stripe keys redacted from error reports
+- **Zod validation** — input validation at every endpoint
+- **Environment validation** — app won't start with invalid config
 
-## Securitate
+## Part of AstroLumina
 
-- Cheile API sunt stocate ca variabile de mediu
-- Limitarea rate previne abuzul
-- CORS restricționează originile la domenii autorizate
-- Gestionarea erorilor previne scurgerea informațiilor sensibile
+| Service | Port | Repository |
+|---------|------|------------|
+| Payment API | 3032 | `AstroLumina-PaymentAPI` |
+| Astrology API | 3031 | `AstroLumina-AstrologyAPI` |
+| Frontend | 5173 | `AstroLumina-Frontend` |
+| Booking API | — | `AstroLumina-BookingAPI` |
+
