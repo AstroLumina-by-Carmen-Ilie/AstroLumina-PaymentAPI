@@ -14,6 +14,8 @@ const isProduction = env.NODE_ENV === 'production';
 
 const app = express();
 
+app.set('trust proxy', 1);
+
 // ─── Security ────────────────────────────────────────────────
 app.use(securityHeaders);
 app.use(corsMiddleware);
