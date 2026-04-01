@@ -9,6 +9,7 @@ import { securityHeaders, corsMiddleware, rateLimiter } from './middleware/secur
 import { payloadTooLargeHandler, notFoundHandler, globalErrorHandler } from './middleware/error-handler.js';
 import healthRouter from './routes/health.js';
 import checkoutRouter from './routes/checkout.js';
+import webhookRouter from './routes/webhook.js';
 
 const isProduction = env.NODE_ENV === 'production';
 
@@ -26,6 +27,9 @@ app.use(compression());
 
 // ─── Logging ─────────────────────────────────────────────────
 app.use(morgan(isProduction ? 'combined' : 'dev'));
+
+// ─── Webhook (MUST be before express.json - needs raw body) ───
+app.use('/webhook', webhookRouter);
 
 // ─── Body parser ─────────────────────────────────────────────
 app.use(express.json({ limit: '1mb' }));
