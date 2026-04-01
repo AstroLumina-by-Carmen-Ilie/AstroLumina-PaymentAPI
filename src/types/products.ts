@@ -7,38 +7,32 @@ export interface ProductConfig {
 }
 
 const productCatalog: Record<string, ProductConfig> = {
-  booking: {
-    name: 'Consultatie Astrologica',
-    priceId: env.STRIPE_BOOKING_PRICE,
-    description: 'Programare consultatie astrologica personalizata',
+  'soarele-stralucirea-ta': {
+    name: 'Soarele Stralucirea Ta',
+    priceId: env.STRIPE_SOARELE_STRALUCIREA_TA,
+    description: 'Soarele Stralucirea Ta',
   },
-  'natal-chart': {
-    name: 'Harta Natala',
-    priceId: env.STRIPE_NATAL_CHART_PRICE,
-    description: 'Raport complet harta natala cu interpretare',
+  'ghid-saturn-in-berbec': {
+    name: 'Ghid Saturn in Berbec',
+    priceId: env.STRIPE_GHID_SATURN_IN_BERBEC,
+    description: 'Ghid complet Saturn in Berbec',
   },
-  'karmic-chart': {
-    name: 'Harta Karmica',
-    priceId: env.STRIPE_KARMIC_CHART_PRICE,
-    description: 'Raport harta karmica cu lectii de viata',
+  'astrograma-natala-si-karmica': {
+    name: 'Astrograma Natala si Karmica',
+    priceId: env.STRIPE_ASTROGRAMA_NATALA_SI_KARMICA,
+    description: 'Astrograma natala si karmica',
+  },
+  'astrograma-relationala': {
+    name: 'Astrograma Relationala',
+    priceId: env.STRIPE_ASTROGRAMA_RELATIONALA,
+    description: 'Astrograma relationala',
+  },
+  'astrograma-previzionala': {
+    name: 'Astrograma Previzionala',
+    priceId: env.STRIPE_ASTROGRAMA_PREVIZIONALA,
+    description: 'Astrograma previzionala',
   },
 };
-
-if (env.STRIPE_RELATIONSHIP_CHART_PRICE) {
-  productCatalog['relationship-chart'] = {
-    name: 'Relatie Sinastrie',
-    priceId: env.STRIPE_RELATIONSHIP_CHART_PRICE,
-    description: 'Raport compatibilitate relationala',
-  };
-}
-
-if (env.STRIPE_TRANSIT_CHART_PRICE) {
-  productCatalog['transit-chart'] = {
-    name: 'Tranzite',
-    priceId: env.STRIPE_TRANSIT_CHART_PRICE,
-    description: 'Raport tranzite planetare curente',
-  };
-}
 
 export { productCatalog };
 
