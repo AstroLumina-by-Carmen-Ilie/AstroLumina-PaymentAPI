@@ -5,7 +5,7 @@ import { env } from '../config/env.js';
 
 const resend = env.RESEND_API_KEY ? new Resend(env.RESEND_API_KEY) : null;
 
-const FROM_EMAIL = 'AstroLumina <onboarding@resend.dev>';
+const FROM_EMAIL = 'AstroLumina <carmen.ilie@astrolumina.ro>';
 const ATTACHMENT_FILE = join(process.cwd(), env.RESEND_ATTACHMENT_PATH);
 
 interface SendEmailParams {
