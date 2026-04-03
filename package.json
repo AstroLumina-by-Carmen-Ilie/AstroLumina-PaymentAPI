@@ -13,7 +13,8 @@
     "dev": "tsx watch src/server.ts",
     "typecheck": "tsc --noEmit",
     "clean": "rm -rf dist",
-    "render-build": "rm -rf node_modules && npm install --include=dev && npm run build"
+    "render-build": "rm -rf node_modules && npm install --include=dev && npm run build",
+    "local-build": "rm -rf node_modules && rm -rf dist && npm update && npm install --include=dev && npm run build"
   },
   "dependencies": {
     "@sentry/node": "^10.45.0",
@@ -26,6 +27,7 @@
     "helmet": "^8.1.0",
     "morgan": "^1.10.1",
     "stripe": "^17.7.0",
+    "resend": "^6.10.0",
     "zod": "^3.24.0"
   },
   "devDependencies": {
@@ -35,6 +37,7 @@
     "@types/morgan": "^1.9.10",
     "@types/node": "^22.15.0",
     "tsx": "^4.19.0",
-    "typescript": "^5.8.0"
+    "typescript": "^5.9.3",
+    "typescript-language-server": "^5.1.3"
   }
 }

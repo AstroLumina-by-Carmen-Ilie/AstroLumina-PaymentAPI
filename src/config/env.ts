@@ -5,20 +5,24 @@ const envSchema = z.object({
   NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
   PORT: z.coerce.number().int().positive().default(3032),
 
-  STRIPE_SK: z.string().min(1, 'STRIPE_SK is required'),
-  STRIPE_PK: z.string().min(1, 'STRIPE_PK is required'),
-  STRIPE_API_VER: z.string().default('2025-01-27.acacia'),
-
-  STRIPE_BOOKING_PRICE: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
-  STRIPE_NATAL_CHART_PRICE: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
-  STRIPE_KARMIC_CHART_PRICE: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
-  STRIPE_RELATIONSHIP_CHART_PRICE: z.string().startsWith('price_', 'Must be a valid Stripe price ID').optional(),
-  STRIPE_TRANSIT_CHART_PRICE: z.string().startsWith('price_', 'Must be a valid Stripe price ID').optional(),
-
   SENTRY_DSN: z.string().url().optional(),
   SENTRY_RELEASE: z.string().optional(),
 
   CORS_ORIGINS: z.string().optional(),
+
+  RESEND_API_KEY: z.string().startsWith('re_', 'Must be a valid Resend API key').optional(),
+  RESEND_ATTACHMENT_PATH: z.string().default(''),
+
+  STRIPE_SK: z.string().min(1, 'STRIPE_SK is required'),
+  STRIPE_PK: z.string().min(1, 'STRIPE_PK is required'),
+  STRIPE_API_VER: z.string().default('2025-01-27.acacia'),
+  STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_', 'Must be a valid Stripe webhook secret'),
+
+  STRIPE_SOARELE_STRALUCIREA_TA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
+  STRIPE_GHID_SATURN_IN_BERBEC: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
+  STRIPE_ASTROGRAMA_NATALA_SI_KARMICA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
+  STRIPE_ASTROGRAMA_RELATIONALA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
+  STRIPE_ASTROGRAMA_PREVIZIONALA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
 });
 
 function validateEnv() {
