@@ -10,8 +10,6 @@ const envSchema = z.object({
 
   CORS_ORIGINS: z.string().optional(),
 
-  RESEND_API_KEY: z.string().startsWith('re_', 'Must be a valid Resend API key').optional(),
-
   STRIPE_SK: z.string().min(1, 'STRIPE_SK is required'),
   STRIPE_PK: z.string().min(1, 'STRIPE_PK is required'),
   STRIPE_API_VER: z.string().default('2025-01-27.acacia'),

@@ -9,7 +9,7 @@ Stripe Embedded Checkout for the AstroLumina astrological services platform.
 
 ## Overview
 
-Stateless microservice that creates Stripe Embedded Checkout sessions for AstroLumina astrological services. Handles webhook events and sends confirmation emails via Resend.
+Stateless microservice that creates Stripe Embedded Checkout sessions for AstroLumina astrological services.
 
 ## Quick Start
 
@@ -80,14 +80,12 @@ Lists all available products with their keys, names, and descriptions.
 |----------|----------|---------|-------------|
 | `STRIPE_SK` | Yes | — | Stripe secret key |
 | `STRIPE_PK` | Yes | — | Stripe publishable key |
-| `STRIPE_WEBHOOK_SECRET` | No | — | Stripe webhook signing secret |
-| `STRIPE_BOOKING_PRICE` | Yes | — | Price ID for booking service |
-| `STRIPE_NATAL_CHART_PRICE` | Yes | — | Price ID for natal chart |
-| `STRIPE_KARMIC_CHART_PRICE` | Yes | — | Price ID for karmic chart |
-| `STRIPE_RELATIONSHIP_CHART_PRICE` | No | — | Price ID for relationship chart |
-| `STRIPE_TRANSIT_CHART_PRICE` | No | — | Price ID for transit chart |
+| `STRIPE_SOARELE_STRALUCIREA_TA` | Yes | — | Price ID for product Soarele Stralucirea Ta |
+| `STRIPE_GHID_SATURN_IN_BERBEC` | Yes | — | Price ID for product Ghidul lui Saturn in Berbec |
+| `STRIPE_ASTROGRAMA_NATALA_SI_KARMICA` | Yes | — | Price ID for booking Astrograma Natala si Karmica |
+| `STRIPE_ASTROGRAMA_RELATIONALA` | No | — | Price ID for booking Astrograma Relationala |
+| `STRIPE_ASTROGRAMA_PREVIZIONALA` | No | — | Price ID for booking Astrograma Previzionala |
 | `STRIPE_API_VER` | No | `2025-01-27.acacia` | Stripe API version |
-| `RESEND_API_KEY` | No | — | Resend API key for emails |
 | `PORT` | No | `3032` | Server listen port |
 | `NODE_ENV` | No | `development` | Environment mode |
 | `CORS_ORIGINS` | No | *(hardcoded)* | Comma-separated allowed origins |
@@ -106,9 +104,6 @@ src/
 ├── routes/
 │   ├── checkout.ts       # Stripe checkout endpoints
 │   ├── health.ts        # Health check
-│   └── webhook.ts       # Stripe webhook handler
-├── services/
-│   └── email.ts        # Resend email service
 ├── types/
 │   └── products.ts     # Product catalog
 └── server.ts         # App entry + graceful shutdown
@@ -122,7 +117,6 @@ src/
 | Language | TypeScript 5.8 (strict mode, ESM) |
 | Framework | Express 5.x |
 | Payments | Stripe Embedded Checkout 17.x |
-| Email | Resend |
 | Validation | Zod |
 | Monitoring | Sentry (error tracking + profiling) |
 | Security | Helmet, CORS, Rate Limiting |
@@ -136,7 +130,6 @@ src/
 - **Sentry PII scrubbing** — Stripe keys redacted from error reports
 - **Zod validation** — input validation at every endpoint
 - **Environment validation** — app won't start with invalid config
-- **Webhook signature verification** — validates Stripe webhooks
 
 ## Part of AstroLumina
 
