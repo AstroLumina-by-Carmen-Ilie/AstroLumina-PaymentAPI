@@ -11,12 +11,10 @@ const envSchema = z.object({
   CORS_ORIGINS: z.string().optional(),
 
   RESEND_API_KEY: z.string().startsWith('re_', 'Must be a valid Resend API key').optional(),
-  RESEND_ATTACHMENT_PATH: z.string().default(''),
 
   STRIPE_SK: z.string().min(1, 'STRIPE_SK is required'),
   STRIPE_PK: z.string().min(1, 'STRIPE_PK is required'),
   STRIPE_API_VER: z.string().default('2025-01-27.acacia'),
-  STRIPE_WEBHOOK_SECRET: z.string().startsWith('whsec_', 'Must be a valid Stripe webhook secret'),
 
   STRIPE_SOARELE_STRALUCIREA_TA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
   STRIPE_GHID_SATURN_IN_BERBEC: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),

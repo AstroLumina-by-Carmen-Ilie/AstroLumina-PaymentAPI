@@ -74,12 +74,6 @@ Retrieves the status of a checkout session.
 
 Lists all available products with their keys, names, and descriptions.
 
-### `POST /webhook`
-
-Stripe webhook endpoint for handling checkout events. Processes `checkout.session.completed` events and triggers email delivery for digital products.
-
-**Requires:** Stripe signature verification via `stripe-signature` header.
-
 ## Environment Variables
 
 | Variable | Required | Default | Description |
