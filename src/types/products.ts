@@ -32,6 +32,11 @@ const productCatalog: Record<string, ProductConfig> = {
     priceId: env.STRIPE_ASTROGRAMA_PREVIZIONALA,
     description: 'Astrograma previzionala',
   },
+  'eveniment-constelatii': {
+    name: 'Eveniment Constelatii',
+    priceId: env.STRIPE_EVENIMENT_CONSTELATII,
+    description: 'Eveniment constelatii',
+  },
 };
 
 export { productCatalog };

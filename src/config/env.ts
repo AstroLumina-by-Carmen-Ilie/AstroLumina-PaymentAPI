@@ -19,6 +19,7 @@ const envSchema = z.object({
   STRIPE_ASTROGRAMA_NATALA_SI_KARMICA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
   STRIPE_ASTROGRAMA_RELATIONALA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
   STRIPE_ASTROGRAMA_PREVIZIONALA: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
+  STRIPE_EVENIMENT_CONSTELATII: z.string().startsWith('price_', 'Must be a valid Stripe price ID'),
 });
 
 function validateEnv() {
