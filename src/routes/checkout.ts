@@ -21,7 +21,7 @@ const productParamSchema = z.object({
  * POST /create-checkout-session/:product
  *
  * Unified endpoint for all product types.
- * Available products: booking, natal-chart, karmic-chart, relationship-chart, transit-chart
+ * For 'eveniment-constelatii', accepts ticketCount in body.
  */
 router.post(
   '/create-checkout-session/:product',
@@ -46,9 +46,14 @@ router.post(
         );
       }
 
+      // Get ticketCount from body for constellation events
+      const ticketCount = req.body?.ticketCount ?? 1;
+      const eventId = req.body?.eventId;
+
       SentryInstance.setContext('checkout', {
         product: productKey,
         priceId: product.priceId,
+        ticketCount,
       });
 
       const session = await SentryInstance.startSpan(
@@ -56,10 +61,14 @@ router.post(
         async () =>
           stripe.checkout.sessions.create({
             ui_mode: 'embedded',
-            line_items: [{ price: product.priceId, quantity: 1 }],
+            line_items: [{ price: product.priceId, quantity: ticketCount }],
             mode: 'payment',
             redirect_on_completion: 'never',
-            metadata: { product: productKey },
+            metadata: { 
+              product: productKey,
+              ticketCount: String(ticketCount),
+              ...(eventId ? { eventId } : {}),
+            },
           }),
       );
 
