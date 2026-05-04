@@ -30,11 +30,8 @@ COPY --from=deps /app/node_modules ./node_modules
 COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 
-ENV NODE_ENV=production
-ENV PORT=3032
-
 LABEL org.opencontainers.image.title="AstroLumina PaymentAPI" \
-      org.opencontainers.image.description="Payment API REST server wrapping Stripe" \
+      org.opencontainers.image.description="Payment API Express Server" \
       org.opencontainers.image.vendor="AstroLumina" \
       org.opencontainers.image.licenses="MIT"
 
