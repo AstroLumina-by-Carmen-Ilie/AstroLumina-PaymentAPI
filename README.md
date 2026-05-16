@@ -41,7 +41,7 @@ Stripe Embedded Checkout for the AstroLumina astrological services platform.
 | ----------------- | ----------------------------------------------------------- |
 | **HTTP Headers**  | Helmet (CSP, HSTS, X-Frame-Options, etc.)                   |
 | **Rate Limiting** | 30 requests/minute per IP                                   |
-| **CORS**          | Dynamic whitelist built from `*_SERVER_PORT` / `*_SERVER_DNS` env vars (Astrology, Booking, Payment, Frontend services) + Cloudflare Pages domains (`astrolumina.pages.dev`, `development.astrolumina.pages.dev`, `astrolumina.com`, `astrolumina.ro`). Override via `CORS_ORIGINS`. |
+| **CORS**          | Dynamic whitelist built from `*_SERVER_PORT` / `*_SERVER_DNS` env vars (Astrology, Booking, Payment, Frontend services) + Cloudflare Pages domains (`astrolumina.pages.dev`, `develop.astrolumina.pages.dev`, `astrolumina.com`, `astrolumina.ro`). Override via `CORS_ORIGINS`. |
 | **Request Size**  | Max 1MB body (returns `413` if exceeded)                    |
 | **PII Scrubbing** | Sentry automatically redacts Stripe keys from error reports |
 | **Input Validation** | Zod schemas on all endpoint inputs                       |
