@@ -27,7 +27,7 @@ if (env.PAYMENT_API_SENTRY_DSN) {
 
     tracePropagationTargets: [
       "localhost",
-      /^https:\/\/astrologer\.rapidapi\.com/,
+      /^https:\/\/api\.stripe\.com/,
       /^https:\/\/astrolumina\.pages\.dev/,
       /^https:\/\/develop\.astrolumina\.pages\.dev/,
       /^https:\/\/.*\.astrolumina\.com/,
