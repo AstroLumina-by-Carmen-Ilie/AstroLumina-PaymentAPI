@@ -31,12 +31,11 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/package.json ./
 
 LABEL org.opencontainers.image.title="AstroLumina PaymentAPI" \
-      org.opencontainers.image.description="Payment API Express Server" \
-      org.opencontainers.image.vendor="AstroLumina" \
-      org.opencontainers.image.licenses="MIT"
+    org.opencontainers.image.description="Payment API Express Server" \
+    org.opencontainers.image.vendor="AstroLumina" \
+    org.opencontainers.image.licenses="MIT"
 
 RUN chown -R nodejs:nodejs /app
 USER nodejs
-EXPOSE 3032
 
 CMD ["node", "dist/server.js"]

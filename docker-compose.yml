@@ -1,17 +1,41 @@
 services:
-  payment:
+  payment-api:
     build:
       context: .
       dockerfile: Dockerfile
     image: ghcr.io/astrolumina-by-carmen-ilie/astrolumina-paymentapi:latest
     pull_policy: always
     restart: unless-stopped
-    env_file:
-      - .env
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - ASTROLOGY_API_SERVER_PORT=${ASTROLOGY_API_SERVER_PORT}
+      - ASTROLOGY_API_SERVER_DNS=${ASTROLOGY_API_SERVER_DNS}
+      - BOOKING_API_SERVER_PORT=${BOOKING_API_SERVER_PORT}
+      - BOOKING_API_SERVER_DNS=${BOOKING_API_SERVER_DNS}
+      - PAYMENT_API_SERVER_PORT=${PAYMENT_API_SERVER_PORT}
+      - PAYMENT_API_SERVER_DNS=${PAYMENT_API_SERVER_DNS}
+      - FRONTEND_SERVER_PORT=${FRONTEND_SERVER_PORT}
+      - FRONTEND_SERVER_DNS=${FRONTEND_SERVER_DNS}
+      - PAYMENT_API_SENTRY_DSN=${PAYMENT_API_SENTRY_DSN}
+      - STRIPE_API_VER=${STRIPE_API_VER}
+      - STRIPE_SK=${STRIPE_SK}
+      - STRIPE_SOARELE_STRALUCIREA_TA=${STRIPE_SOARELE_STRALUCIREA_TA}
+      - STRIPE_GHID_SATURN_IN_BERBEC=${STRIPE_GHID_SATURN_IN_BERBEC}
+      - STRIPE_ASTROGRAMA_NATALA_SI_KARMICA=${STRIPE_ASTROGRAMA_NATALA_SI_KARMICA}
+      - STRIPE_ASTROGRAMA_RELATIONALA=${STRIPE_ASTROGRAMA_RELATIONALA}
+      - STRIPE_ASTROGRAMA_PREVIZIONALA=${STRIPE_ASTROGRAMA_PREVIZIONALA}
+      - STRIPE_EVENIMENT_CONSTELATII=${STRIPE_EVENIMENT_CONSTELATII}
     ports:
-      - "3032:3032"
+      - "${PAYMENT_API_SERVER_PORT}:${PAYMENT_API_SERVER_PORT}"
     healthcheck:
-      test: [ "CMD", "wget", "--spider", "-q", "http://localhost:3032/health" ]
+      test:
+        [
+          "CMD",
+          "wget",
+          "--spider",
+          "-q",
+          "http://localhost:${PAYMENT_API_SERVER_PORT}/health",
+        ]
       interval: 30s
       timeout: 10s
       retries: 3
@@ -20,10 +44,10 @@ services:
       replicas: 1
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 1G
         reservations:
-          cpus: '0.125'
+          cpus: "0.125"
           memory: 128M
     networks:
       - payment-api

@@ -1,4 +1,4 @@
-import { env } from '../config/env.js';
+import { env } from "../config/env.js";
 
 export interface ProductConfig {
   name: string;
@@ -7,35 +7,35 @@ export interface ProductConfig {
 }
 
 const productCatalog: Record<string, ProductConfig> = {
-  'soarele-stralucirea-ta': {
-    name: 'Soarele Stralucirea Ta',
+  "soarele-stralucirea-ta": {
+    name: "Soarele Stralucirea Ta",
     priceId: env.STRIPE_SOARELE_STRALUCIREA_TA,
-    description: 'Soarele Stralucirea Ta',
+    description: "Soarele Stralucirea Ta",
   },
-  'ghid-saturn-in-berbec': {
-    name: 'Ghid Saturn in Berbec',
+  "ghid-saturn-in-berbec": {
+    name: "Ghid Saturn in Berbec",
     priceId: env.STRIPE_GHID_SATURN_IN_BERBEC,
-    description: 'Ghid complet Saturn in Berbec',
+    description: "Ghid complet Saturn in Berbec",
   },
-  'astrograma-natala-si-karmica': {
-    name: 'Astrograma Natala si Karmica',
+  "astrograma-natala-si-karmica": {
+    name: "Astrograma Natala si Karmica",
     priceId: env.STRIPE_ASTROGRAMA_NATALA_SI_KARMICA,
-    description: 'Astrograma natala si karmica',
+    description: "Astrograma natala si karmica",
   },
-  'astrograma-relationala': {
-    name: 'Astrograma Relationala',
+  "astrograma-relationala": {
+    name: "Astrograma Relationala",
     priceId: env.STRIPE_ASTROGRAMA_RELATIONALA,
-    description: 'Astrograma relationala',
+    description: "Astrograma relationala",
   },
-  'astrograma-previzionala': {
-    name: 'Astrograma Previzionala',
+  "astrograma-previzionala": {
+    name: "Astrograma Previzionala",
     priceId: env.STRIPE_ASTROGRAMA_PREVIZIONALA,
-    description: 'Astrograma previzionala',
+    description: "Astrograma previzionala",
   },
-  'eveniment-constelatii': {
-    name: 'Eveniment Constelatii',
+  "eveniment-constelatii": {
+    name: "Eveniment Constelatii",
     priceId: env.STRIPE_EVENIMENT_CONSTELATII,
-    description: 'Eveniment constelatii',
+    description: "Eveniment constelatii",
   },
 };
 
