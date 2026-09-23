@@ -17,15 +17,15 @@
     "c_u_i_b_d": "npm run clean && npm update --ignore-scripts && npm install --include=dev && npm run build && npm run dev"
   },
   "dependencies": {
-    "@sentry/node": "^10.45.0",
-    "@sentry/profiling-node": "^8.55.0",
+    "@sentry/node": "^10.75.3",
+    "@sentry/profiling-node": "^11.0.0",
     "compression": "^1.8.1",
     "cors": "^2.8.6",
     "dotenv": "^16.6.1",
     "express": "^5.1.0",
     "express-rate-limit": "^7.5.1",
     "helmet": "^8.1.0",
-    "morgan": "^1.10.1",
+    "morgan": "^1.12.0",
     "stripe": "^17.7.0",
     "zod": "^3.24.0"
   },
