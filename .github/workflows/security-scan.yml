@@ -2,8 +2,13 @@
 # AstroLumina PaymentAPI — Security Scan
 #
 # Three pillars of vulnerability scanning:
-#   1. STATIC  (SAST + SCA) — CodeQL + Semgrep scan the source; npm audit +
-#      Trivy (fs mode) scan dependencies, secrets and misconfigurations.
+#   1. STATIC  (SAST + SCA) — Semgrep scans the source; npm audit + Trivy
+#      (fs mode) scan dependencies, secrets and misconfigurations. CodeQL
+#      itself runs through the repo's DEFAULT setup (automatic) — GitHub
+#      rejects advanced-setup SARIF uploads while default setup is enabled,
+#      so this workflow intentionally contains no CodeQL init/analyze job.
+#      To switch to advanced CodeQL, enable it under Settings → Code
+#      security and re-add the init/autobuild/analyze job.
 #   2. DOCKER  — the production image is built locally (no push) and scanned
 #      with Trivy (OS + library vulnerabilities, misconfigurations, secrets).
 #   3. DYNAMIC (DAST) — the API is booted with dummy (non-secret) env values
@@ -12,8 +17,8 @@
 # All SARIF results are uploaded to GitHub code scanning, so findings show up
 # under the repository's "Security" tab and as PR annotations.
 #
-# NOTE (private repos): CodeQL analysis and the Security tab require GitHub
-# Advanced Security (GHAS). If GHAS is not enabled, the CodeQL job will fail —
+# NOTE (private repos): the Security tab requires GitHub Advanced
+# Security (GHAS). Without it, SARIF uploads are skipped by GitHub —
 # Semgrep / npm audit / Trivy / ZAP results (logs + artifacts) still work.
 #
 # The workflow is REPORT-ONLY on purpose: it never fails on findings.
@@ -45,34 +50,7 @@ env:
 
 jobs:
   # ─────────────────────────────────────────────────────────────────────────
-  # 1a. STATIC — CodeQL (GitHub-native SAST, SARIF → Security tab)
-  # ─────────────────────────────────────────────────────────────────────────
-  sast-codeql:
-    name: SAST / CodeQL
-    runs-on: ubuntu-latest
-    permissions:
-      actions: read
-      contents: read
-      security-events: write
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v4
-
-      - name: Initialize CodeQL
-        uses: github/codeql-action/init@v4
-        with:
-          languages: javascript-typescript
-
-      - name: Autobuild
-        uses: github/codeql-action/autobuild@v4
-
-      - name: Analyze
-        uses: github/codeql-action/analyze@v4
-        with:
-          category: "/language:javascript-typescript"
-
-  # ─────────────────────────────────────────────────────────────────────────
-  # 1b. STATIC — Semgrep (rule-based SAST, works with or without GHAS)
+  # 1a. STATIC — Semgrep (rule-based SAST, works with or without GHAS)
   # ─────────────────────────────────────────────────────────────────────────
   sast-semgrep:
     name: SAST / Semgrep
@@ -95,11 +73,13 @@ jobs:
           /tmp/semgrep-venv/bin/pip install --quiet semgrep
 
       - name: Semgrep scan (report only)
-        # Exits non-zero when findings exist — findings are not failures here.
+        # Explicit ruleset `p/default`: `--config auto` refuses to run with
+        # metrics off, and metrics stay off here. Findings exit non-zero,
+        # which is not a failure (see continue-on-error).
         continue-on-error: true
         env:
           SEMGREP_SEND_METRICS: off
-        run: /tmp/semgrep-venv/bin/semgrep scan --config auto --sarif --output semgrep.sarif
+        run: /tmp/semgrep-venv/bin/semgrep scan --config p/default --sarif --output semgrep.sarif
 
       - name: Upload SARIF to code scanning
         uses: github/codeql-action/upload-sarif@v4
@@ -109,7 +89,7 @@ jobs:
           category: semgrep
 
   # ─────────────────────────────────────────────────────────────────────────
-  # 1c. STATIC — Software Composition Analysis (dependencies, secrets, IaC)
+  # 1b. STATIC — Software Composition Analysis (dependencies, secrets, IaC)
   # ─────────────────────────────────────────────────────────────────────────
   sca:
     name: SCA / npm audit + Trivy repo
@@ -147,6 +127,7 @@ jobs:
           scan-ref: .
           scanners: vuln,secret,misconfig
           severity: CRITICAL,HIGH
+          limit-severities-for-sarif: 'true'
           format: sarif
           output: trivy-fs.sarif
           exit-code: "0"
@@ -189,6 +170,7 @@ jobs:
           image-ref: payment-api:security-scan
           scanners: vuln,misconfig,secret
           severity: CRITICAL,HIGH
+          limit-severities-for-sarif: 'true'
           format: sarif
           output: trivy-image.sarif
           exit-code: "0"
