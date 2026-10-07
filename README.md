@@ -41,7 +41,7 @@ Stripe Embedded Checkout for the AstroLumina astrological services platform.
 | ----------------- | ----------------------------------------------------------- |
 | **HTTP Headers**  | Helmet (CSP, HSTS, X-Frame-Options, etc.)                   |
 | **Rate Limiting** | 30 requests/minute per IP                                   |
-| **CORS**          | Dynamic whitelist built from `*_SERVER_PORT` / `*_SERVER_DNS` env vars (Astrology, Booking, Payment, Frontend services) + Cloudflare Pages domains (`astrolumina.pages.dev`, `develop.astrolumina.pages.dev`, `astrolumina.com`, `astrolumina.ro`). Override via `CORS_ORIGINS`. |
+| **CORS**          | Dynamic whitelist built from `*_SERVER_DC_PORT` / `*_SERVER_DC_DNS` and `*_SERVER_K8S_PORT` / `*_SERVER_K8S_DNS` env vars (Astrology, Booking, Payment, Frontend services) over `http` + `https` on `localhost`, `192.168.122.10-12` and each service DNS + Cloudflare Pages domains (`astrolumina.pages.dev`, `develop.astrolumina.pages.dev`, `astrolumina.com`, `astrolumina.ro`). Override via `CORS_ORIGINS`. |
 | **Request Size**  | Max 1MB body (returns `413` if exceeded)                    |
 | **PII Scrubbing** | Sentry automatically redacts Stripe keys from error reports |
 | **Input Validation** | Zod schemas on all endpoint inputs                       |
@@ -134,15 +134,9 @@ The PaymentAPI is a **stateless microservice** that acts as a proxy between the 
 | Variable                              | Required | Default             | Description                                       |
 | ------------------------------------- | -------- | ------------------- | ------------------------------------------------- |
 | `NODE_ENV`                            | Yes      | —                   | `development`, `staging`, or `production`         |
-| `PAYMENT_API_SERVER_PORT`             | Yes      | —                   | Payment API listen port                           |
-| `PAYMENT_API_SERVER_DNS`              | Yes      | —                   | Payment API domain name                           |
-| `ASTROLOGY_API_SERVER_PORT`           | Yes      | —                   | Astrology API port (for CORS)                     |
-| `ASTROLOGY_API_SERVER_DNS`            | Yes      | —                   | Astrology API domain (for CORS)                   |
-| `BOOKING_API_SERVER_PORT`             | Yes      | —                   | Booking API port (for CORS)                       |
-| `BOOKING_API_SERVER_DNS`              | Yes      | —                   | Booking API domain (for CORS)                     |
-| `FRONTEND_SERVER_PORT`                | Yes      | —                   | Frontend port (for CORS)                          |
-| `FRONTEND_SERVER_DNS`                 | Yes      | —                   | Frontend domain (for CORS)                        |
+| `PAYMENT_API_SERVER_PORT`             | Yes      | —                   | Payment API listen port (local process and inside the container) |
 | `PAYMENT_API_SENTRY_DSN`              | Yes      | —                   | Sentry DSN for error tracking                     |
+| `CORS_ORIGINS`                        | No       | _(dynamic defaults)_ | Comma-separated allowed origins; when omitted, defaults are built from the `*_SERVER_DC_PORT` / `*_SERVER_DC_DNS` and `*_SERVER_K8S_PORT` / `*_SERVER_K8S_DNS` variables above plus Cloudflare Pages domains |
 | `STRIPE_SK`                           | Yes      | —                   | Stripe secret key                                 |
 | `STRIPE_API_VER`                      | Yes      | —                   | Stripe API version                                |
 | `STRIPE_SOARELE_STRALUCIREA_TA`       | Yes      | —                   | Price ID for Soarele Stralucirea Ta               |
@@ -151,7 +145,22 @@ The PaymentAPI is a **stateless microservice** that acts as a proxy between the 
 | `STRIPE_ASTROGRAMA_RELATIONALA`       | Yes      | —                   | Price ID for Astrograma Relationala               |
 | `STRIPE_ASTROGRAMA_PREVIZIONALA`      | Yes      | —                   | Price ID for Astrograma Previzionala              |
 | `STRIPE_EVENIMENT_CONSTELATII`        | Yes      | —                   | Price ID for Eveniment Constelatii                |
-| `CORS_ORIGINS`                        | No       | _(computed)_        | Comma-separated override; defaults to all service ports/DNS + `astrolumina.pages.dev`, `astrolumina.com`, `astrolumina.ro` |
+| `ASTROLOGY_API_SERVER_DC_PORT`        | Yes      | —                   | Astrology API port in Docker Compose (for CORS)   |
+| `ASTROLOGY_API_SERVER_DC_DNS`         | Yes      | —                   | Astrology API DNS/hostname in Docker Compose (for CORS) |
+| `ASTROLOGY_API_SERVER_K8S_PORT`       | Yes      | —                   | Astrology API port in Kubernetes (for CORS)       |
+| `ASTROLOGY_API_SERVER_K8S_DNS`        | Yes      | —                   | Astrology API DNS/hostname in Kubernetes (for CORS) |
+| `BOOKING_API_SERVER_DC_PORT`          | Yes      | —                   | Booking API port in Docker Compose (for CORS)     |
+| `BOOKING_API_SERVER_DC_DNS`           | Yes      | —                   | Booking API DNS/hostname in Docker Compose (for CORS) |
+| `BOOKING_API_SERVER_K8S_PORT`         | Yes      | —                   | Booking API port in Kubernetes (for CORS)         |
+| `BOOKING_API_SERVER_K8S_DNS`          | Yes      | —                   | Booking API DNS/hostname in Kubernetes (for CORS) |
+| `PAYMENT_API_SERVER_DC_PORT`          | Yes      | —                   | Public port mapped to the app port in Docker Compose |
+| `PAYMENT_API_SERVER_DC_DNS`           | Yes      | —                   | Payment service DNS/hostname in Docker Compose    |
+| `PAYMENT_API_SERVER_K8S_PORT`         | Yes      | —                   | Public port mapped to the app port in Kubernetes  |
+| `PAYMENT_API_SERVER_K8S_DNS`          | Yes      | —                   | Payment service DNS/hostname in Kubernetes        |
+| `FRONTEND_SERVER_DC_PORT`             | Yes      | —                   | Frontend port in Docker Compose (for CORS)        |
+| `FRONTEND_SERVER_DC_DNS`              | Yes      | —                   | Frontend DNS/hostname in Docker Compose (for CORS) |
+| `FRONTEND_SERVER_K8S_PORT`            | Yes      | —                   | Frontend port in Kubernetes (for CORS)            |
+| `FRONTEND_SERVER_K8S_DNS`             | Yes      | —                   | Frontend DNS/hostname in Kubernetes (for CORS)    |
 
 ---
 
