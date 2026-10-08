@@ -16,6 +16,7 @@ import {
   globalErrorHandler,
 } from "./middleware/error-handler.js";
 import healthRouter from "./routes/health.js";
+import { metricsHandler, metricsMiddleware } from "./metrics.js";
 import checkoutRouter from "./routes/checkout.js";
 
 const isProduction = env.NODE_ENV === "production";
@@ -23,6 +24,13 @@ const isProduction = env.NODE_ENV === "production";
 const app = express();
 
 app.set("trust proxy", 1);
+
+// ─── Metrics ─────────────────────────────────────────────────
+// Registered before the security middlewares so Prometheus scrapes are
+// never rate-limited nor CORS-filtered. Reachable only in-cluster (the
+// Traefik routes expose /api/*, never /metrics).
+app.get("/metrics", metricsHandler);
+app.use(metricsMiddleware);
 
 // ─── Security ────────────────────────────────────────────────
 app.use(securityHeaders);
@@ -82,7 +90,6 @@ const gracefulShutdown = async (signal: string) => {
     process.exit(0);
   });
 
-  // Destroy idle keep-alive connections
   for (const conn of connections) {
     conn.destroy();
   }
